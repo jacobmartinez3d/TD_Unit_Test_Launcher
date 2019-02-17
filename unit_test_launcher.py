@@ -61,12 +61,22 @@ def run(config):
         for path_to_py_file in _get_py_files(tests_location):
 
             py_file = os.path.splitext(path_to_py_file)[0]
-            test_module = importlib.import_module(py_file.replace("\\", "/"))
+            test_module = importlib.import_module(
+                py_file.replace("\\", "/"))
 
             # from here you have access to your test module
             test_results.write(
                 "\tContents of {} module:\n".format(path_to_py_file))
-            test_results.write(pformat(dir(test_module)))
+
+            test_case = test_module.Test()
+            test_results.write(pformat(dir(test_case)))
+
+            # cant figure out how to get test results here
+            results = test_case
+            test_results.write(str(results))
+
+            print("\tresults:\n")
+            print(pformat(results))
 
     sys.path.remove(tests_location)
 
@@ -80,4 +90,4 @@ test_results_log = run(config_dict)
 
 # exit Touch Designer, with optional callback
 callback_ = os.startfile
-exit(callback_, test_results_log.name)
+# exit(callback_, test_results_log.name)
