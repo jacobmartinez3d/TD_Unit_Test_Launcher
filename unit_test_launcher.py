@@ -2,6 +2,7 @@ import re
 import importlib
 import sys
 import os
+import unittest
 from pprint import pformat
 
 CONFIG_PATH = "config.txt"
@@ -19,6 +20,7 @@ def load_config(config_path=CONFIG_PATH):
 
         content = [line.strip().split(" ")
                    for line in config.readlines()]
+        # filter out lines that don't follow '<key> <value>' format.
         content = list(filter(lambda x: len(x) == 2, content))
         [config_dict.update({line[0]:line[1]}) for line in content]
 
@@ -36,6 +38,7 @@ def _get_py_files(location):
 
     except OSError:
         print("The path:\n\t'{}'\ndoes not exist!\n".format(location))
+        location = []
 
     for dir_entry in location:
         if dir_entry.is_file() and re.search(r"\.py$", dir_entry.name.lower()):
@@ -45,10 +48,9 @@ def _get_py_files(location):
 
 
 def run(config):
-    """Import each python file detected in TESTS_LOCATION.
+    """Import each python file from config dict and update report log.
 
-    :param tests_location: <str> Path to directory containing .py modules.
-    :param log_name: <str> Optional name of log file.
+    :param config: <dict> Contains config settings from config.txt.
     """
     tests_location = config["tests_location"]
     log_name = config.get("log_name", "test_results.txt")
@@ -56,31 +58,40 @@ def run(config):
     sys.path.append(tests_location)
 
     test_results_log = os.path.join(tests_location, log_name)
-    with open(test_results_log, "w+") as test_results:
+    with open(test_results_log, "w+") as test_results_log:
 
         for path_to_py_file in _get_py_files(tests_location):
 
             py_file = os.path.splitext(path_to_py_file)[0]
+            # import file as module
             test_module = importlib.import_module(
                 py_file.replace("\\", "/"))
 
-            # from here you have access to your test module
-            test_results.write(
+            # cant figure out how to get test results here.
+            # tried sending as class and as instance, and without function-name
+            # as arg
+            test_results = test_runner(test_module.Test("test_create_op"))
+
+            # write results to log
+            test_results_log.write(
                 "\tContents of {} module:\n".format(path_to_py_file))
+            # test_results_log.write(pformat(test_case.main()))
+            test_results_log.write(str(test_results))
 
-            test_case = test_module.Test()
-            test_results.write(pformat(dir(test_case)))
-
-            # cant figure out how to get test results here
-            results = test_case
-            test_results.write(str(results))
-
+            # print results to user
             print("\tresults:\n")
-            print(pformat(results))
+            print(test_results)
 
     sys.path.remove(tests_location)
 
-    return test_results
+    return test_results_log
+
+
+def test_runner(test):
+
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(test)
+    runner = unittest.TextTestRunner()
+    return runner.run(suite)
 
 
 # load config from config.txt
