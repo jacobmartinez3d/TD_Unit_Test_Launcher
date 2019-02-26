@@ -3,7 +3,7 @@ import importlib
 import sys
 import os
 import unittest
-from pprint import pformat
+from pprint import pprint, pformat
 
 CONFIG_PATH = "config.txt"
 
@@ -67,11 +67,13 @@ def run(config):
             test_module = importlib.import_module(
                 py_file.replace("\\", "/"))
 
-            # cant figure out how to get test results here.
-            # tried sending as class and as instance, and without function-name
-            # as arg
-            test_results = test_runner(test_module.Test("test_create_op"))
-
+            # unittest
+            print("1")
+            suite = unittest.defaultTestLoader.loadTestsFromTestCase(
+                test_module.TestOpCreationMethods)
+            print("2")
+            test_results = unittest.TextTestRunner(verbosity=2).run(suite)
+            print("3")
             # write results to log
             test_results_log.write(
                 "\tContents of {} module:\n".format(path_to_py_file))
@@ -80,18 +82,12 @@ def run(config):
 
             # print results to user
             print("\tresults:\n")
-            print(test_results)
+            print(test_results.test_create_op())
+            # pprint(dir(test_results))
 
     sys.path.remove(tests_location)
 
     return test_results_log
-
-
-def test_runner(test):
-
-    suite = unittest.defaultTestLoader.loadTestsFromTestCase(test)
-    runner = unittest.TextTestRunner()
-    return runner.run(suite)
 
 
 # load config from config.txt

@@ -7,11 +7,8 @@ import unittest
 import td
 
 
-class Test(unittest.TestCase):
+class TestOpCreationMethods(unittest.TestCase):
     """Collection of tests related to op creation."""
-
-    def __init__(self):
-        super(Test, self).__init__()
 
     def test_create_op(self):
         # no name argument
@@ -20,19 +17,20 @@ class Test(unittest.TestCase):
         self.assertIsInstance(
             td.op("/").create(td.containerCOMP), td.containerCOMP)
         # class is not namespaced
-        self.assertIsInstance(
-            td.op("/").create(containerCOMP), td.containerCOMP)
+        # self.assertIsInstance(
+        #     td.op("/").create(containerCOMP), td.containerCOMP)
 
         # validate by searching the root for the op
 
         # single character name
         self.assertTrue(self._assertWasCreated(
-            td.containerCOMP, self._id_generator(1, 1)))
+            self._id_generator(1, 1), td.containerCOMP))
         # blank name
-        self.assertTrue(self._assertWasCreated(td.containerCOMP, ""))
+        self.assertTrue(self._assertWasCreated(
+            "", td.containerCOMP))
         # rediculously large name (using Windows path length limit)
         self.assertTrue(self._assertWasCreated(
-            td.containerCOMP, self._id_generator(32767, 32767)))
+            self._id_generator(100, 1000), td.containerCOMP))
 
     def _assertWasCreated(self, name, class_=td.containerCOMP):
         """Return True if a node with the given name exists at the project root.
@@ -47,11 +45,12 @@ class Test(unittest.TestCase):
         return name in op_names
 
     @staticmethod
-    def _id_generator(min_=1, max_=500, chars=string.ascii_letters):
+    def _id_generator(min_=1, max_=50, chars=string.ascii_letters):
         """Generate a random name of random length."""
 
         return ''.join(random.choice(chars)
                        for i in range(random.randint(min_, max_)))
+
 
 if __name__ == "__main__":
     unittest.main()
