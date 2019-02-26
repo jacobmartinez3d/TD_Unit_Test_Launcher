@@ -22,11 +22,11 @@ def exit():
 to:
 
 ```
-def exit(callback_, arg):
-
-    callback_(arg)
+def exit(callback_, *args, **kwargs):
 
     project.quit()
+    callback_(*args, **kwargs)
+
 ```
 Now your exit callback code will run just before the exit command.
 

@@ -28,6 +28,8 @@ def load_config(config_path=CONFIG_PATH):
 def _get_py_files(location):
     """Scan the location directory and return a list of .py filenames.
     scandir is reccomended for speed and handling of overlength Windows paths.
+
+    :param location: <str> location to scan in.
     """
     py_files = []
 
@@ -47,8 +49,7 @@ def _get_py_files(location):
 def run(config):
     """Import each python file detected in TESTS_LOCATION.
 
-    :param tests_location: <str> Path to directory containing .py modules.
-    :param log_name: <str> Optional name of log file.
+    :param config: <dict> containing info from config.txt.
     """
     tests_location = config["tests_location"]
     log_name = config.get("log_name", "test_results.txt")
