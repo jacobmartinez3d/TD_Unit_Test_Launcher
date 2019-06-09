@@ -38,6 +38,7 @@ def _get_py_files(location):
 
     except OSError:
         print("The path:\n\t'{}'\ndoes not exist!\n".format(location))
+        return
 
     for dir_entry in location:
         if dir_entry.is_file() and re.search(r"\.py$", dir_entry.name.lower()):

@@ -13,7 +13,7 @@ The default settings in *config.txt* point to *example_test_folder* as the targe
 #### In order for the exit callback to work, it requires making a slight edit to:
 */Touch/Designer/Install/Location/bin/TouchInit.py*.
 
-Change the *exit()* definition toward the end of *TouchInit.py* from:
+Change the *exit()* definition **toward the bottom** of *TouchInit.py* from:
 ```
 def exit():
 
@@ -22,10 +22,12 @@ def exit():
 to:
 
 ```
-def exit(callback_, *args, **kwargs):
+def exit(callback_=None, *args, **kwargs):
 
     project.quit()
-    callback_(*args, **kwargs)
+    
+    if callback_:
+    	callback_(*args, **kwargs)
 
 ```
 Now your exit callback code will run just before the exit command.
