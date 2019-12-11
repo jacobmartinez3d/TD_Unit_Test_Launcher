@@ -1,26 +1,24 @@
-import re
 import importlib
-import sys
+import json
 import os
+import re
+import sys
 from pprint import pformat
 
-CONFIG_PATH = "config.txt"
+CONFIG_PATH = "config.json"
 
 __version__ = 0.1
 
 
-def load_config(config_path=CONFIG_PATH):
+def load_config(config_path=None):
     """load each line in config.txt into dictionary.
 
     :param config_path: <str> Path to config txt
     """
     config_dict = {}
-    with open(config_path, "r") as config:
+    with open(config_path or CONFIG_PATH, "r") as config:
 
-        content = [line.strip().split(" ")
-                   for line in config.readlines()]
-        content = list(filter(lambda x: len(x) == 2, content))
-        [config_dict.update({line[0]:line[1]}) for line in content]
+        config_dict = json.load(config)
 
     return config_dict
 
@@ -76,11 +74,10 @@ def run(config):
 
 
 # load config from config.txt
-config_dict = load_config()
+CONFIG_DICT = load_config()
 # run unit test launcher
-test_results_log = run(config_dict)
+TEST_RESULTS_LOG = run(CONFIG_DICT)
 
 # exit Touch Designer, with optional callback
-os.startfile(test_results_log.name)
-
-exit()
+os.startfile(TEST_RESULTS_LOG.name)
+project.quit(force=True)
