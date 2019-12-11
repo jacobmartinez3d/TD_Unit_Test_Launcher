@@ -58,29 +58,20 @@ def run(config):
     sys.path.append(tests_location)
 
     test_results_log = os.path.join(tests_location, log_name)
-    with open(test_results_log, "w+") as test_results_log:
+    for py_file_entry in _get_py_files(tests_location):
 
-        for path_to_py_file in _get_py_files(tests_location):
+        py_file_module_path = os.path.splitext(py_file_entry)[0]
+        # import file as module
+        test_module = importlib.import_module(
+            py_file_module_path.replace("\\", "/"))
 
-            py_file = os.path.splitext(path_to_py_file)[0]
-            # import file as module
-            test_module = importlib.import_module(
-                py_file.replace("\\", "/"))
-
-            # unittest
-            suite = unittest.defaultTestLoader.loadTestsFromTestCase(
-                test_module.TestOpCreationMethods)
-            test_results = unittest.TextTestRunner(verbosity=2).run(suite)
-            print(str(test_results))
-            # write results to log
-            # test_results_log.write(
-            #     "\tContents of {} module:\n".format(path_to_py_file))
-            # test_results_log.write(str(test_results))
-
-            # print results to user
-            # print("\tresults:\n")
-            # print(test_results.test_create_op())
-            # pprint(dir(test_results))
+        # unittest suite
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(
+            test_module.TestOpCreationMethods)
+        test_results = unittest.TextTestRunner().run(suite)
+        print(test_results)
+        # print(test_results.errors)
+        # print(test_results.failures)
 
     sys.path.remove(tests_location)
 
@@ -91,7 +82,3 @@ def run(config):
 CONFIG_DICT = load_config()
 # run unit test launcher
 TEST_RESULTS_LOG = run(CONFIG_DICT)
-
-# exit Touch Designer, with optional callback
-os.startfile(TEST_RESULTS_LOG.name)
-# project.quit(force=True)

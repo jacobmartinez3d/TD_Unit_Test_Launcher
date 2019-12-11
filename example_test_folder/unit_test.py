@@ -11,34 +11,19 @@ class TestOpCreationMethods(unittest.TestCase):
     """Collection of tests related to op creation."""
 
     def test_create_op(self):
-        # no name argument
-
-        # basic create with no name
-        self.assertIsInstance(
-            td.op("/").create(td.containerCOMP), td.containerCOMP)
-        # class is not namespaced
-        # self.assertIsInstance(
-        #     td.op("/").create(containerCOMP), td.containerCOMP)
-
         # validate by searching the root for the op
-
+        self.assertIsInstance(td.op("/").create(td.containerCOMP), str)
         # single character name
-        self.assertTrue(self._assertWasCreated(
-            self._id_generator(1, 1), td.containerCOMP))
-        # blank name
-        self.assertTrue(self._assertWasCreated(
-            "", td.containerCOMP))
-        # rediculously large name (using Windows path length limit)
-        self.assertTrue(self._assertWasCreated(
-            self._id_generator(100, 1000), td.containerCOMP))
+        self.assertTrue(self._assertWasCreated(self._id_generator(1, 1), td.containerCOMP))
+        # # rediculously large name (using Windows path length limit)
+        self.assertTrue(self._assertWasCreated(self._id_generator(1000, 1000), td.containerCOMP))
 
-    def _assertWasCreated(self, name, class_=td.containerCOMP):
+    def _assertWasCreated(self, name, class_):
         """Return True if a node with the given name exists at the project root.
 
         :param class_: <cls> td.Op Class type to create.
         :param name: <str> Name of the op to look for.
         """
-        name = self._id_generator()
         td.op("/").create(class_, name)
         op_names = [child.name for child in td.op("/").children]
 
@@ -48,8 +33,7 @@ class TestOpCreationMethods(unittest.TestCase):
     def _id_generator(min_=1, max_=50, chars=string.ascii_letters):
         """Generate a random name of random length."""
 
-        return ''.join(random.choice(chars)
-                       for i in range(random.randint(min_, max_)))
+        return ''.join(random.choice(chars) for i in range(random.randint(min_, max_)))
 
 
 if __name__ == "__main__":
