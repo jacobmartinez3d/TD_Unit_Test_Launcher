@@ -9,30 +9,6 @@ Clone or download this repository.
 
 The default settings in *config.txt* point to *example_test_folder* as the target directory containing .py files to run inside Touch Designer, but you can point to any other directory by pasting an absolute path instead. A result log will always be saved inside the folder you target. The log name can also be set in config.txt.
 
-
-#### In order for the exit callback to work, it requires making a slight edit to:
-*/Touch/Designer/Install/Location/bin/TouchInit.py*.
-
-Change the *exit()* definition **toward the bottom** of *TouchInit.py* from:
-```
-def exit():
-
-    project.quit()
-```
-to:
-
-```
-def exit(callback_=None, *args, **kwargs):
-
-    project.quit()
-    
-    if callback_:
-    	callback_(*args, **kwargs)
-
-```
-Now your exit callback code will run just before the exit command.
-
-
 ### Prerequisites
 
 Must have Touch Designer installed
