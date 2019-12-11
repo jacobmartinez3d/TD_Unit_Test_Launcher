@@ -81,5 +81,6 @@ config_dict = load_config()
 test_results_log = run(config_dict)
 
 # exit Touch Designer, with optional callback
-callback_ = os.startfile
-exit(callback_, test_results_log.name)
+os.startfile(test_results_log.name)
+
+exit()
