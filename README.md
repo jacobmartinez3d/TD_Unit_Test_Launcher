@@ -1,13 +1,14 @@
 # Touch Designer Unit-Test-Launcher.
 
-Launch Touch Designer from the command-line or terminal, trigger python scripts to run on startup, and close with optional callback on exit.
+Launch Touch Designer from the command-line or terminal, trigger python unittest scripts to run on startup, and close with optional callback on exit.
 
 
 ## Getting Started
 
 Clone or download this repository.
 
-The default settings in *config.txt* point to *example_test_folder* as the target directory containing .py files to run inside Touch Designer, but you can point to any other directory by pasting an absolute path instead. A result log will always be saved inside the folder you target. The log name can also be set in config.txt.
+The default settings in *config.json* point to *example_test_folder* as the target directory containing TestCase .py files to run inside Touch Designer, but you can point to any other directory by pasting an absolute path instead.
+
 
 ### Prerequisites
 
@@ -25,7 +26,7 @@ example in Windows:
 "C:\Program Files\Derivative\TouchDesigner099\bin\TouchDesigner099.exe" "E:\Projects\TDGam\tests\unit_test_launcher.toe"
 ```
 
-Touch Designer will launch, import the python files as modules in your target folder, write to a txt log, then exit and open the report log.
+Touch Designer will launch, import the TestCases as a TestSuite in your target folder, then exit.
 
 
 ## Authors
