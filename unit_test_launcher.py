@@ -1,28 +1,25 @@
 import re
 import importlib
+import json
 import sys
 import os
 import unittest
 from pprint import pprint, pformat
 
-CONFIG_PATH = "config.txt"
+CONFIG_PATH = "config.json"
 
 __version__ = 0.1
 
 
-def load_config(config_path=CONFIG_PATH):
+def load_config(config_path=None):
     """load each line in config.txt into dictionary.
 
     :param config_path: <str> Path to config txt
     """
     config_dict = {}
-    with open(config_path, "r") as config:
+    with open(config_path or CONFIG_PATH, "r") as config:
 
-        content = [line.strip().split(" ")
-                   for line in config.readlines()]
-        # filter out lines that don't follow '<key> <value>' format.
-        content = list(filter(lambda x: len(x) == 2, content))
-        [config_dict.update({line[0]:line[1]}) for line in content]
+        config_dict = json.load(config)
 
     return config_dict
 
@@ -30,6 +27,8 @@ def load_config(config_path=CONFIG_PATH):
 def _get_py_files(location):
     """Scan the location directory and return a list of .py filenames.
     scandir is reccomended for speed and handling of overlength Windows paths.
+
+    :param location: <str> location to scan in.
     """
     py_files = []
 
@@ -48,9 +47,10 @@ def _get_py_files(location):
 
 
 def run(config):
-    """Import each python file from config dict and update report log.
+    """Import each python file detected in TESTS_LOCATION.
 
-    :param config: <dict> Contains config settings from config.txt.
+    :param config: containing info from config.txt.
+    :type  config: dict
     """
     tests_location = config["tests_location"]
     log_name = config.get("log_name", "test_results.txt")
@@ -68,21 +68,18 @@ def run(config):
                 py_file.replace("\\", "/"))
 
             # unittest
-            print("1")
             suite = unittest.defaultTestLoader.loadTestsFromTestCase(
                 test_module.TestOpCreationMethods)
-            print("2")
             test_results = unittest.TextTestRunner(verbosity=2).run(suite)
-            print("3")
+            print(str(test_results))
             # write results to log
-            test_results_log.write(
-                "\tContents of {} module:\n".format(path_to_py_file))
-            # test_results_log.write(pformat(test_case.main()))
-            test_results_log.write(str(test_results))
+            # test_results_log.write(
+            #     "\tContents of {} module:\n".format(path_to_py_file))
+            # test_results_log.write(str(test_results))
 
             # print results to user
-            print("\tresults:\n")
-            print(test_results.test_create_op())
+            # print("\tresults:\n")
+            # print(test_results.test_create_op())
             # pprint(dir(test_results))
 
     sys.path.remove(tests_location)
@@ -91,10 +88,10 @@ def run(config):
 
 
 # load config from config.txt
-config_dict = load_config()
+CONFIG_DICT = load_config()
 # run unit test launcher
-test_results_log = run(config_dict)
+TEST_RESULTS_LOG = run(CONFIG_DICT)
 
 # exit Touch Designer, with optional callback
-callback_ = os.startfile
-# exit(callback_, test_results_log.name)
+os.startfile(TEST_RESULTS_LOG.name)
+# project.quit(force=True)
