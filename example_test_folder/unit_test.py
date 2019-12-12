@@ -11,12 +11,16 @@ class TestMain(unittest.TestCase):
     """Collection of tests related to op creation."""
 
     def test_create_op(self):
+        """Test various default Touch Designer op-creation scenarios."""
         # validate by searching the root for the op
         self.assertIsInstance(td.op("/").create(td.containerCOMP), str)
         # single character name
         self.assertTrue(self._assertWasCreated(self._id_generator(1, 1), td.containerCOMP))
         # # rediculously large name (using Windows path length limit)
         self.assertTrue(self._assertWasCreated(self._id_generator(1000, 1000), td.containerCOMP))
+        # uncomment below to trigger a failed test result.
+        # Don't forget to uncomment line 76 in unit_test_launcher.py
+        # self.assertTrue(False)
 
     def _assertWasCreated(self, name, class_):
         """Return True if a node with the given name exists at the project root.
