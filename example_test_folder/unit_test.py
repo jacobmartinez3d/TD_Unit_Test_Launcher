@@ -19,7 +19,7 @@ class TestMain(unittest.TestCase):
         # # rediculously large name (using Windows path length limit)
         self.assertTrue(self._assertWasCreated(self._id_generator(1000, 1000), td.containerCOMP))
         # uncomment below to trigger a failed test result.
-        # Don't forget to uncomment line 76 in unit_test_launcher.py
+        # Don't forget to uncomment the 'print(test_results.failures)' line in unit_test_launcher.py
         # self.assertTrue(False)
 
     def _assertWasCreated(self, name, class_):
