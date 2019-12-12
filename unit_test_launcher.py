@@ -53,11 +53,10 @@ def run(config):
     :type  config: dict
     """
     tests_location = config["tests_location"]
-    log_name = config.get("log_name", "test_results.txt")
+    test_results = None
 
     sys.path.append(tests_location)
 
-    test_results_log = os.path.join(tests_location, log_name)
     for py_file_entry in _get_py_files(tests_location):
 
         py_file_module_path = os.path.splitext(py_file_entry)[0]
@@ -68,22 +67,21 @@ def run(config):
         # unittest suite
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(
             test_module.TestMain)
+        # test_results is a unittest.TestResult object
         test_results = unittest.TextTestRunner().run(suite)
 
-        # test_results is a unittest.TestResult object
-        print(test_results)
         # print(test_results.errors)
         # print(test_results.failures)
 
     sys.path.remove(tests_location)
 
-    return test_results_log
+    return test_results
 
 
 # load config from config.txt
 CONFIG_DICT = load_config()
 # run unit test launcher
-TEST_RESULTS_LOG = run(CONFIG_DICT)
+sys.stdout.write(run(CONFIG_DICT))
 
 # uncomment below line to automatically quit Touch Designer after running tests.
 # exit()
