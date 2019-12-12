@@ -8,7 +8,7 @@ from pprint import pprint, pformat
 
 CONFIG_PATH = "config.json"
 
-__version__ = 0.1
+__version__ = 0.2
 
 
 def load_config(config_path=None):
@@ -67,8 +67,10 @@ def run(config):
 
         # unittest suite
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(
-            test_module.TestOpCreationMethods)
+            test_module.TestMain)
         test_results = unittest.TextTestRunner().run(suite)
+
+        # test_results is a unittest.TestResult object
         print(test_results)
         # print(test_results.errors)
         # print(test_results.failures)
@@ -82,3 +84,6 @@ def run(config):
 CONFIG_DICT = load_config()
 # run unit test launcher
 TEST_RESULTS_LOG = run(CONFIG_DICT)
+
+# uncomment below line to automatically quit Touch Designer after running tests.
+# exit()

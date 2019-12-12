@@ -7,7 +7,7 @@ import unittest
 import td
 
 
-class TestOpCreationMethods(unittest.TestCase):
+class TestMain(unittest.TestCase):
     """Collection of tests related to op creation."""
 
     def test_create_op(self):
