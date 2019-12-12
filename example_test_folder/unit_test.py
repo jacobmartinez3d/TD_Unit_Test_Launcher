@@ -13,7 +13,7 @@ class TestMain(unittest.TestCase):
     def test_create_op(self):
         """Test various default Touch Designer op-creation scenarios."""
         # validate by searching the root for the op
-        self.assertIsInstance(td.op("/").create(td.containerCOMP), str)
+        self.assertIsInstance(td.op("/").create(td.containerCOMP), td.containerCOMP)
         # single character name
         self.assertTrue(self._assertWasCreated(self._id_generator(1, 1), td.containerCOMP))
         # # rediculously large name (using Windows path length limit)
