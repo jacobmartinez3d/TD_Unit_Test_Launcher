@@ -26,7 +26,7 @@ example in Windows:
 C:\Program Files\Derivative\TouchDesigner099\bin\TouchDesigner099.exe E:\Projects\TDGam\tests\unit_test_launcher.toe
 ```
 
-Touch Designer will launch, import the TestCases as a TestSuite in your target folder, then exit.
+Touch Designer will launch, import the TestCases as a TestSuite in your target folder then, (if the final line is uncommented) exit.
 
 
 ## Authors
